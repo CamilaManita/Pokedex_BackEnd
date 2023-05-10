@@ -21,7 +21,7 @@ pokeRouter.get("/", async (req, res) => {
     const response = await getAllPokemons();
     return res.send(response);
   } catch (error) {
-    return res.json(error.message);
+    return res.status(500).send('Error al obtener los pokemons');
   }
 });
 
