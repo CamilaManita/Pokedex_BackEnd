@@ -1,21 +1,13 @@
-require("dotenv").config();
-
-const { API_URL } = process.env;
-const axios = require("axios");
+const getAllPokemons = require("./getAll.controllers");
 
 const getPokemonById = async (id) => {
-  const res = await axios.get(`${API_URL}/${id}`);
+  const allPokemons = await getAllPokemons();
+  if(!allPokemons) throw new Error('No pokemons found')
 
-  if (!res) throw new Error(`No se encuentra el personaje`);
+  const pokemonFound = allPokemons.find(pokemon => pokemon.id === id);
+  if(!pokemonFound) throw new Error('The searched pokemon is not in the pokedex. Go find it and hunt it!!');
   
-  const pokemon = {
-    id: res.data.id,
-    name: res.data.name,
-    height: res.data.height,
-    weight: res.data.weight
-  };
-
-  return pokemon;
+  return pokemonFound;
 };
 
 module.exports = getPokemonById;
