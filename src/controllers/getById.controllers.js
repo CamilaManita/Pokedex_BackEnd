@@ -6,7 +6,7 @@ const getPokemonById = async (id) => {
 
   const pokemonFound = allPokemons.find(pokemon => pokemon.id === id);
   if(!pokemonFound) throw new Error('The searched pokemon is not in the pokedex. Go find it and hunt it!!');
-  
+  console.log(pokemonFound);
   return pokemonFound;
 };
 

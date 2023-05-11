@@ -1,7 +1,7 @@
 const getAllPokemons = require("./getAll.controllers")
 
 const getPokemonByName = async (name) => {
-    const allPokemons = await getAllPokemons();
+    const allPokemons = await getAllPokemons(name);
     if(!allPokemons) throw new Error('No pokemons found');
 
     const pokemonsFiltered = allPokemons.filter(dog => dog.name === name);

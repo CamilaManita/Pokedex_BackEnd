@@ -6,14 +6,14 @@ const getAllPokemons = async () => {
   
   //Traigo de la API
   const getPokemonDetails = (url) => {
-    //Obtengo los detalles de un pokemon
+    // Obtengo los detalles de un pokemon
     return axios.get(url)
       .then(response => response.data)
       .catch(error => console.log(error));
   }
   
   //Obtengo la lista de URLs de todos los pokemon
-  const response = await axios.get(API_URL);
+  const response = await axios.get(`${API_URL}?limit=100`);
   const urls = response.data.results.map(pokemon => pokemon.url);
 
   //Obtengo los detalles de todos los pokemon
