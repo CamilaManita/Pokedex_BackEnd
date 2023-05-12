@@ -41,7 +41,7 @@ pokeRouter.post('/', async (req,res) => {
   
     return res.status(200).json(newPokemon);
   } catch (error) {
-    return res.status(400).send(error.message)
+    res.status(400).send(error.message);
   }
 })
 
