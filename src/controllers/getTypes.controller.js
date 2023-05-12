@@ -13,13 +13,8 @@ const getTypes = async () => {
             }
         });
     });
-    console.log(typesAPI);
 
-    const typesDB = await Type.findAll();
-
-    const allTypes = [...typesAPI, ...typesDB];
-    
-    return allTypes;
+    return 'typesCreated';
 }
 
 module.exports = getTypes;

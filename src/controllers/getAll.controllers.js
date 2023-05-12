@@ -1,26 +1,29 @@
-const { Pokemon } = require('../db');
+const { Pokemon } = require("../db");
 const { API_URL } = process.env;
 const axios = require("axios");
+const {Type} = require('../db');
 
-const getAllPokemons = async () => {
-  
+const getAPIPokemons = async () => {
   //Traigo de la API
   const getPokemonDetails = (url) => {
     // Obtengo los detalles de un pokemon
-    return axios.get(url)
-      .then(response => response.data)
-      .catch(error => console.log(error));
-  }
+    return axios
+      .get(url)
+      .then((response) => response.data)
+      .catch((error) => console.log(error));
+  };
   
   //Obtengo la lista de URLs de todos los pokemon
-  const response = await axios.get(`${API_URL}?limit=100`);
-  const urls = response.data.results.map(pokemon => pokemon.url);
-
+  const response = await axios.get(`${API_URL}?limit=200`);
+  const urls = response.data.results.map((pokemon) => pokemon.url);
+  
   //Obtengo los detalles de todos los pokemon
-  const pokemonDetails = await Promise.all(urls.map(url => getPokemonDetails(url)));
-
+  const pokemonDetails = await Promise.all(
+    urls.map((url) => getPokemonDetails(url))
+  );
+  
   //Convertimos el array de detalles
-  const pokemonsAPI = pokemonDetails.map(pokemon => {
+  const pokemonsAPI = pokemonDetails.map((pokemon) => {
     return {
       id: pokemon.id,
       name: pokemon.name,
@@ -31,17 +34,40 @@ const getAllPokemons = async () => {
       speed: pokemon.stats[5].base_stat,
       height: pokemon.height,
       weight: pokemon.weight,
-      types: pokemon.types.map(type => type.type.name),
+      types: pokemon.types.map((type) => type.type.name),
     };
   });
-  //Busco en la base de datos
-  const pokemonsDB = await Pokemon.findAll()
+  return pokemonsAPI;
+}
 
+const getDBPokemons = async () => {
+  //Busco en la base de datos
+  const pokemonsDB = await Pokemon.findAll({
+    include: {
+      model: Type,
+      attributes: ['name'],
+      through: {
+        attributes: []
+      }
+    }
+  });
+
+  const pokemonsDbMap = pokemonsDB.map(pokemon => (
+    {
+      ...pokemon.toJSON(),
+      types: pokemon.types.map(type => type.name),
+    }));
+
+  return pokemonsDbMap;
+}
+
+const getAllPokemons = async () => {
+  const pokemonsAPI = await getAPIPokemons();
+  const pokemonsDB = await getDBPokemons();
   //Guardo ambas respuestas en un array
-  const allPokemons = [...pokemonsAPI, ...pokemonsDB]
+  const allPokemons = [...pokemonsAPI, ...pokemonsDB];
 
   return allPokemons;
 };
 
 module.exports = getAllPokemons;
-
