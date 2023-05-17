@@ -45,7 +45,6 @@ const getNameAPI = async (name) => {
   }
 }
 
-
 const getPokemonByName = async (name) => {
   const pokemonDB = await getNameDB(name);
   const pokemonAPI = await getNameAPI(name);
