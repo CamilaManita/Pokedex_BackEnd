@@ -1,11 +1,27 @@
-const getAllPokemons = require('./getAll.controllers');
+const {formatear, formatearTypes} = require('../Helpers/Helpers');
+const {Pokemon, Type} = require('../db');
+const axios = require('axios');
 
 const getName = async (name) => {
-    const response = await getAllPokemons();
-    if(!response) throw new Error('No existen los pokemones')
-
-    const pokemonFound = response.find(poke => poke.name == name);
-    return pokemonFound;
+    const responseDB = await Pokemon.findOne({
+        where: {
+            name
+        },
+            include: {
+              model: Type,
+              attributes: ['name'],
+              through: {
+                attributes: []
+              }
+            }
+    });
+    if(responseDB) {
+        return formatearTypes(responseDB);
+    }
+    
+    const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
+        
+    return formatear(response.data);
 }
 
 module.exports = getName;
