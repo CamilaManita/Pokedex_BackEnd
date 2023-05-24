@@ -1,7 +1,6 @@
-const { Pokemon } = require("../db");
+const { Pokemon, Type } = require("../db");
 const { API_URL } = process.env;
 const axios = require("axios");
-const {Type} = require('../db');
 
 const getAPIPokemons = async () => {
   //Traigo de la API
@@ -40,6 +39,7 @@ const getAPIPokemons = async () => {
   return pokemonsAPI;
 }
 
+
 const getDBPokemons = async () => {
   //Busco en la base de datos
   const pokemonsDB = await Pokemon.findAll({
@@ -66,7 +66,7 @@ const getAllPokemons = async () => {
   const pokemonsDB = await getDBPokemons();
   
   //Guardo ambas respuestas en un array
-  const allPokemons = [...pokemonsAPI, ...pokemonsDB];
+  const allPokemons = [...pokemonsDB, ...pokemonsAPI];
 
   return allPokemons;
 };

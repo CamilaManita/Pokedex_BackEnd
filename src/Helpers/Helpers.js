@@ -10,12 +10,13 @@ const formatear = (pokemon) => {
         height: pokemon.height,
         weight: pokemon.weight,
         types: pokemon.types.map((type) => type.type.name),
-      };
-    }
+    };
+}
 
 const formatearTypes = (pokemonDB) => {
     return {...pokemonDB.toJSON(),
-        types: pokemonDB.types.map(type => type.name)}
+        types: pokemonDB.types.map(type => type.name)
     }
+}   
     
 module.exports = {formatear, formatearTypes};
