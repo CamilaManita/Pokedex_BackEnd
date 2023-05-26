@@ -2,47 +2,56 @@ const { Router } = require("express");
 
 const pokeRouter = Router();
 
-const getPokemonById = require('../controllers/getById.controller');
+const getPokemonById = require("../controllers/getById.controller");
 const getAllPokemons = require("../controllers/getAll.controllers");
 const getPokemonByName = require("../controllers/getByName.controllers");
 const postPokemon = require("../controllers/post.controller");
 
-
 pokeRouter.get("/", async (req, res) => {
-  const {name} = req.query;
+  const { name } = req.query;
   try {
-    if(!name) {
+    if (!name) {
       const response = await getAllPokemons();
       return res.status(200).json(response);
     }
-    
-    const pokemon = await getPokemonByName(name)
-    return res.status(200).json(pokemon)
+
+    const pokemon = await getPokemonByName(name);
+    return res.status(200).json(pokemon);
   } catch (error) {
     return res.status(500).send(error.message);
   }
 });
 
 pokeRouter.get("/:id", async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
   try {
     const pokemon = await getPokemonById(id);
     return res.status(200).json(pokemon);
-
   } catch (error) {
     return res.status(400).send(error.message);
   }
 });
 
-pokeRouter.post('/', async (req,res) => {
-  const {name, image, hp, attack, defense, speed, height, weight, types} = req.body;
+pokeRouter.post("/", async (req, res) => {
+  const { name, image, hp, attack, defense, speed, height, weight, types } =
+    req.body;
   try {
-    const newPokemon = await postPokemon(name, image, hp, attack, defense, speed, height, weight, types);
-  
+    const newPokemon = await postPokemon(
+      name,
+      image,
+      hp,
+      attack,
+      defense,
+      speed,
+      height,
+      weight,
+      types
+    );
+
     return res.status(200).json(newPokemon);
   } catch (error) {
     res.status(400).send(error.message);
   }
-})
+});
 
 module.exports = pokeRouter;
